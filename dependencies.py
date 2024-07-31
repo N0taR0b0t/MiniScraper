@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import time
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -54,11 +55,11 @@ def is_likely_pdf(content):
     return content.startswith('%PDF-')
 
 # Function to fetch and extract text content from a URL using requests and BeautifulSoup
-def fetch_text_from_url(url, retries=3):
+def fetch_text_from_url(url, retries=2):
     attempt = 0
     while attempt < retries:
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=5)  # Set timeout for the request
             response.raise_for_status()
             response.encoding = 'utf-8'  # Force encoding to UTF-8
 
@@ -84,7 +85,7 @@ def fetch_text_from_url(url, retries=3):
     return ""
 
 # Function to fetch text using Selenium
-def fetch_text_with_selenium(url, wait_time=2, retries=3):
+def fetch_text_with_selenium(url, wait_time=2, retries=2):
     attempt = 0
     while attempt < retries:
         try:
@@ -93,6 +94,7 @@ def fetch_text_with_selenium(url, wait_time=2, retries=3):
             
             # Disable headless mode
             driver = webdriver.Chrome(options=options)
+            driver.set_page_load_timeout(5)  # Set page load timeout
             driver.get(url)
             time.sleep(wait_time)  # Allow the page to load completely
             
@@ -117,7 +119,7 @@ def fetch_text_with_selenium(url, wait_time=2, retries=3):
     return ""
 
 # Function to fetch text using an aggressive Selenium strategy
-def fetch_text_aggressively_with_selenium(url, retries=3, wait_time=5):
+def fetch_text_aggressively_with_selenium(url, retries=2, wait_time=5):
     for attempt in range(retries):
         try:
             options = Options()
@@ -125,6 +127,7 @@ def fetch_text_aggressively_with_selenium(url, retries=3, wait_time=5):
             
             # Disable headless mode
             driver = webdriver.Chrome(options=options)
+            driver.set_page_load_timeout(5)  # Set page load timeout
             driver.get(url)
             time.sleep(wait_time)  # Allow the page to load completely
 
@@ -147,6 +150,17 @@ def fetch_text_aggressively_with_selenium(url, retries=3, wait_time=5):
     logging.error(f"Skipping {url} after {retries} attempts with aggressive Selenium.")
     return ""
 
+# Wrapper function to handle timeout
+def fetch_text_with_timeout(url, func, timeout=5):
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(func, url)
+        try:
+            result = future.result(timeout=timeout)
+            return result
+        except TimeoutError:
+            logging.error(f"Timeout fetching {url}")
+            return ""
+
 def grab_website_text():
     # Read URLs from the chosen_links.json file
     urls = extract_links('chosen_links.json')
@@ -160,11 +174,11 @@ def grab_website_text():
     # Fetch and save text content from each URL
     texts = []
     for url in urls:
-        text = fetch_text_from_url(url)
+        text = fetch_text_with_timeout(url, fetch_text_from_url)
         if not text:  # Use Selenium as a fallback
-            text = fetch_text_with_selenium(url)
+            text = fetch_text_with_timeout(url, fetch_text_with_selenium)
         if not text:  # Use aggressive Selenium strategy if previous attempts fail
-            text = fetch_text_aggressively_with_selenium(url)
+            text = fetch_text_with_timeout(url, fetch_text_aggressively_with_selenium)
         texts.append({"URL": url, "Text": text})
 
     # Save the extracted text content to an output file

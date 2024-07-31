@@ -1,42 +1,42 @@
 [
     {
         "URL_ID": 1,
-        "Title": "",
-        "Link": ""
+        "Title": "Pittsburgh PA News, Weather and Sports - WTAE-TV ...",
+        "Link": "https://www.wtae.com/"
     },
     {
         "URL_ID": 2,
-        "Title": "",
-        "Link": "https://www.tipranks.com/stocks/mu/forecast#:~:text=Micron's%20analyst%20rating%20consensus%20is,of%2027%20Wall%20Streets%20Analysts."
+        "Title": "WPXI: Pittsburgh News, Weather, Traffic and Sports",
+        "Link": "https://www.wpxi.com/homepage"
     },
     {
         "URL_ID": 3,
-        "Title": "",
-        "Link": "https://www.zacks.com/stock/research/MU/earnings-calendar#:~:text=This%20reflects%20a%20positive%20earnings,%2Dyear%20increase%20of%20200.93%25."
+        "Title": "CBS Pittsburgh - Breaking Local News, First Alert Weather ...",
+        "Link": "https://www.cbsnews.com/pittsburgh/"
     },
     {
         "URL_ID": 4,
-        "Title": "",
-        "Link": "https://markets.businessinsider.com/stocks/mu-stock#:~:text=Micron%20Technology%20stock%20has%20received,ratings%2C%20and%206%20sell%20ratings."
+        "Title": "Pittsburgh Post-Gazette",
+        "Link": "https://www.post-gazette.com/"
     },
     {
         "URL_ID": 5,
-        "Title": "",
-        "Link": "https://www.benzinga.com/news/24/07/39967298/why-micron-mu-stock-is-falling#:~:text=Micron%20shares%20are%20trading%20lower,Taiwan%20comments%20and%20earnings%20updates."
+        "Title": "Pittsburgh Local News",
+        "Link": "https://triblive.com/local/pittsburgh/"
     },
     {
         "URL_ID": 6,
-        "Title": "Micron Technology, Inc. (MU) Latest Stock News & Headlines",
-        "Link": "https://finance.yahoo.com/quote/MU/news/"
+        "Title": "Breaking News from KDKA-TV - CBS Pittsburgh",
+        "Link": "https://www.cbsnews.com/pittsburgh/local-news/"
     },
     {
         "URL_ID": 7,
-        "Title": "MU News Today | Why did Micron Technology stock go ...",
-        "Link": "https://www.marketbeat.com/stocks/NASDAQ/MU/news/"
+        "Title": "Pittsburgh News, Weather, Sports, Breaking News",
+        "Link": "https://www.wpgh53.com/"
     },
     {
         "URL_ID": 8,
-        "Title": "Micron Technology, Inc. Common Stock (MU) Earnings",
-        "Link": "https://www.nasdaq.com/market-activity/stocks/mu/earnings"
+        "Title": "Local Pittsburgh Breaking News and Live Alerts",
+        "Link": "https://www.wtae.com/local-news"
     }
 ]

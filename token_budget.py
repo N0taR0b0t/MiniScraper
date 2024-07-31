@@ -34,10 +34,10 @@ def select_shortest_texts(data, char_budget):
             
     return selected_entries
 
-def budget():
+def budget_entries():
     input_file = 'output_texts.json'
     output_file = 'web_text.json'
-    char_budget = 13000
+    char_budget = 12500
     
     data = read_output_texts(input_file)
     selected_entries = select_shortest_texts(data, char_budget)
@@ -46,4 +46,4 @@ def budget():
     print(f"Selected {len(selected_entries)} entries with a total of {sum(len(entry['Text']) for entry in selected_entries)} characters.")
     
 if __name__ == "__main__":
-    budget()
+    budget_entries()

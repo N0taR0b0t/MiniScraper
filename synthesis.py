@@ -21,8 +21,8 @@ def synthesis_with_gpt4o(search_query):
     
     # Prepare the messages for GPT-4O
     messages = [
-        {"role": "system", "content": "You are a helpful research assistant."},
-        {"role": "user", "content": f"""Below are the google search results for the query '{search_query}'.\n Some results may be incomplete.\n{formatted_data}\n\nIgnore irrelevent information, and provide a detailed explanation of the available data to the user."""}
+        {"role": "system", "content": "You are a helpful research assistant. You will ignore irrelevent information, and provide a detailed explanation of the available data to the user."},
+        {"role": "user", "content": f"""Below are the google search results for the query '{search_query}':\n{formatted_data}\n\n"""}
     ]
     
     # Make the API call to OpenAI
@@ -36,6 +36,3 @@ def synthesis_with_gpt4o(search_query):
     print(response_text)
     with open("Synthesis.txt", "w") as outfile:
         json.dump(response_text, outfile)
-
-if __name__ == '__main__':
-    synthesis_with_gpt4o("")
