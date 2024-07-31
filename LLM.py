@@ -3,7 +3,6 @@ import openai
 import configparser
 from datetime import datetime, timedelta
 import json
-from dependencies import grab_website_text
 
 # Load configuration
 config = configparser.ConfigParser()
@@ -22,8 +21,8 @@ def process_links_with_gpt4o(search_query):
     
     # Prepare the messages for GPT-4O
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": f"""Here are the search results for the query '{search_query}':\n\n{formatted_data}\n\nRespond with the 5 most relevant "Link" values to the query, in a CHOSEN_LINKS json object."""}
+        {"role": "system", "content": "You are a helpful research assistant."},
+        {"role": "user", "content": f"""Here are the search results for the query '{search_query}':\n\n{formatted_data}\n\nRespond with the 5 most relevant "Link" values to the query (avoid links that end with .pdf), in a CHOSEN_LINKS json object."""}
     ]
     
     # Make the API call to OpenAI
@@ -38,5 +37,3 @@ def process_links_with_gpt4o(search_query):
     print(response_text)
     with open("chosen_links.json", "w") as outfile:
         json.dump(response_text, outfile)
-
-    grab_website_text()

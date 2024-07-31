@@ -54,7 +54,7 @@ def is_likely_pdf(content):
     return content.startswith('%PDF-')
 
 # Function to fetch and extract text content from a URL using requests and BeautifulSoup
-def fetch_text_from_url(url, retries=10):
+def fetch_text_from_url(url, retries=3):
     attempt = 0
     while attempt < retries:
         try:
@@ -80,50 +80,41 @@ def fetch_text_from_url(url, retries=10):
             logging.error(f"Error parsing content from {url} on attempt {attempt}: {e}")
             attempt += 1
 
-    # If all retries fail, fallback to default encoding and try one last time
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        response.encoding = 'utf-8'
-
-        # Check for PDF content and skip if found
-        if is_likely_pdf(response.text):
-            logging.info(f"Skipping PDF content from {url}")
-            return ""
-
-        soup = BeautifulSoup(response.content, 'html.parser')
-        for script in soup(["script", "style", "nav", "footer", "header", "button", "a"]):
-            script.decompose()
-        text = soup.get_text(separator=' ')
-        cleaned_text = clean_text(text)
-        return cleaned_text
-    except Exception as e:
-        logging.error(f"Final fallback attempt failed for {url}: {e}")
-        return ""
+    logging.error(f"Skipping {url} after {retries} attempts.")
+    return ""
 
 # Function to fetch text using Selenium
-def fetch_text_with_selenium(url, wait_time=2):
-    try:
-        options = Options()
-        options.add_argument("user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1")
-        
-        # Disable headless mode
-        driver = webdriver.Chrome(options=options)
-        driver.get(url)
-        time.sleep(wait_time)  # Allow the page to load completely
-        
-        main_content = driver.find_element(By.TAG_NAME, 'body')
-        unwanted_elements = main_content.find_elements(By.XPATH, '//*[self::script or self::style or self::nav or self::footer or self::header or self::button or self::a]')
-        for element in unwanted_elements:
-            driver.execute_script("arguments[0].parentNode.removeChild(arguments[0]);", element)
-        
-        text = main_content.text
-        cleaned_text = clean_text(text)
-        driver.quit()
-        return cleaned_text
-    except Exception as e:
-        logging.error(f"Error fetching {url} with Selenium: {e}")
-        return ""
+def fetch_text_with_selenium(url, wait_time=2, retries=3):
+    attempt = 0
+    while attempt < retries:
+        try:
+            options = Options()
+            options.add_argument("user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 10_3_1 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/10.0 Mobile/14E304 Safari/602.1")
+            
+            # Disable headless mode
+            driver = webdriver.Chrome(options=options)
+            driver.get(url)
+            time.sleep(wait_time)  # Allow the page to load completely
+            
+            main_content = driver.find_element(By.TAG_NAME, 'body')
+            unwanted_elements = main_content.find_elements(By.XPATH, '//*[self::script or self::style or self::nav or self::footer or self::header or self::button or self::a]')
+            for element in unwanted_elements:
+                try:
+                    driver.execute_script("arguments[0].parentNode.removeChild(arguments[0]);", element)
+                except Exception as e:
+                    logging.error(f"Error removing element with Selenium: {e}")
+
+            text = main_content.text
+            cleaned_text = clean_text(text)
+            driver.quit()
+            return cleaned_text
+        except Exception as e:
+            logging.error(f"Error fetching {url} with Selenium on attempt {attempt + 1}: {e}")
+            attempt += 1
+            time.sleep(wait_time)  # Wait longer before next attempt
+    
+    logging.error(f"Skipping {url} after {retries} attempts with Selenium.")
+    return ""
 
 # Function to fetch text using an aggressive Selenium strategy
 def fetch_text_aggressively_with_selenium(url, retries=3, wait_time=5):
@@ -140,7 +131,10 @@ def fetch_text_aggressively_with_selenium(url, retries=3, wait_time=5):
             main_content = driver.find_element(By.TAG_NAME, 'body')
             unwanted_elements = main_content.find_elements(By.XPATH, '//*[self::script or self::style or self::nav or self::footer or self::header or self::button or self::a]')
             for element in unwanted_elements:
-                driver.execute_script("arguments[0].parentNode.removeChild(arguments[0]);", element)
+                try:
+                    driver.execute_script("arguments[0].parentNode.removeChild(arguments[0]);", element)
+                except Exception as e:
+                    logging.error(f"Error removing element with aggressive Selenium: {e}")
             
             text = main_content.text
             cleaned_text = clean_text(text)
@@ -149,6 +143,8 @@ def fetch_text_aggressively_with_selenium(url, retries=3, wait_time=5):
         except Exception as e:
             logging.error(f"Error fetching {url} with aggressive Selenium on attempt {attempt + 1}: {e}")
             time.sleep(wait_time)  # Wait longer before next attempt
+    
+    logging.error(f"Skipping {url} after {retries} attempts with aggressive Selenium.")
     return ""
 
 def grab_website_text():
@@ -176,6 +172,3 @@ def grab_website_text():
         json.dump(texts, outfile, indent=4)
 
     logging.info("Text contents saved to output_texts.json")
-
-# Execute the function
-grab_website_text()

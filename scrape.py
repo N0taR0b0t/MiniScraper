@@ -3,6 +3,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from LLM import process_links_with_gpt4o
+from synthesis import synthesis_with_gpt4o
+from dependencies import grab_website_text
+from token_budget import budget
 import time
 
 def get_title(result):
@@ -29,7 +32,7 @@ time.sleep(2)
 search_box = driver.find_element(By.NAME, "q")
 
 # Type the search query
-search_query = "Biocyc compound discoverer tutorial"
+search_query = "How is MU doing today?"
 search_box.send_keys(search_query)
 
 # Save the search query to a file
@@ -68,5 +71,11 @@ with open("links.json", "w") as outfile:
 driver.quit()
 
 print("Links saved to links.json")
-
+print("Sleeping for 3 seconds")
+time.sleep(3)
 process_links_with_gpt4o(search_query)
+print("Sleeping for 1 seconds")
+time.sleep(2)
+grab_website_text()
+budget()
+synthesis_with_gpt4o(search_query)
