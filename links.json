@@ -1,0 +1,42 @@
+[
+    {
+        "URL_ID": 1,
+        "Title": "Compound Discoverer 3.3 SP2 BioCyc Tutorial",
+        "Link": "https://mycompounddiscoverer.com/wp-content/uploads/2023/03/compound-discoverer-biocyc-tutorial.pdf"
+    },
+    {
+        "URL_ID": 2,
+        "Title": "BioCyc \u2013 Biological pathway mapping in Compound ...",
+        "Link": "https://mycompounddiscoverer.com/2023/03/28/biocyc-biological-pathway-mapping-in-compound-discoverer/"
+    },
+    {
+        "URL_ID": 3,
+        "Title": "Compound Discoverer 3.1 \u2013 User Guide (Revision A)",
+        "Link": "https://assets.thermofisher.com/TFS-Assets/CMD/manuals/man-xcali-98120-compound-discoverer-user-manxcali98120-en.pdf"
+    },
+    {
+        "URL_ID": 4,
+        "Title": "Compound Discoverer 3.3 SP2 User Guide",
+        "Link": "https://assets.thermofisher.com/TFS-Assets/CMD/manuals/XCALI-98478-Compound-Discoverer-User-Guide-LC-Studies-XCALI98478-en.pdf"
+    },
+    {
+        "URL_ID": 5,
+        "Title": "Guide to the BioCyc Database Collection",
+        "Link": "https://biocyc.org/BioCycUserGuide.shtml"
+    },
+    {
+        "URL_ID": 6,
+        "Title": "Web Site User's Guide for Pathway Tools-Based Web Sites",
+        "Link": "https://biocyc.org/PToolsWebsiteHowto.shtml"
+    },
+    {
+        "URL_ID": 7,
+        "Title": "BioCyc Testimonials",
+        "Link": "https://biocyc.org/biocyc-testimonials.shtml"
+    },
+    {
+        "URL_ID": 8,
+        "Title": "Compound Discoverer Software",
+        "Link": "https://lcms.cz/labrulez-bucket-strapi-h3hsga3/br_65168_compound_discoverer_insights_br65168_en_33ad524258/br-65168-compound-discoverer-insights-br65168-en.pdf"
+    }
+]
